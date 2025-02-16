@@ -26,14 +26,33 @@ exports.createWallpaper = async (req, res) => {
 };
 
 // GET all wallpapers
+// exports.getAllWallpapers = async (req, res) => {
+//   try {
+//     const category = req.query.category; // Get the category from query parameters
+//     let query = {}; // Create empty query
+//     if (category) {
+//       query = { category: category }; // If category is provided, add it to the query
+//     }
+//     const wallpapers = await Wallpaper.find(query); // Apply the query
+//     res.json(wallpapers);
+//   } catch (err) {
+//     console.error(err);
+//     res.status(500).json({ message: 'Server Error' });
+//   }
+// };
 exports.getAllWallpapers = async (req, res) => {
   try {
-    const category = req.query.category; // Get the category from query parameters
-    let query = {}; // Create empty query
+    const { category } = req.query; // Get the category from query parameters
+    let query = {}; 
+
     if (category) {
-      query = { category: category }; // If category is provided, add it to the query
+      if (!mongoose.Types.ObjectId.isValid(category)) {
+        return res.status(400).json({ message: 'Invalid category ID' });
+      }
+      query.category = new mongoose.Types.ObjectId(category); // Convert to ObjectId
     }
-    const wallpapers = await Wallpaper.find(query); // Apply the query
+
+    const wallpapers = await Wallpaper.find(query);
     res.json(wallpapers);
   } catch (err) {
     console.error(err);
