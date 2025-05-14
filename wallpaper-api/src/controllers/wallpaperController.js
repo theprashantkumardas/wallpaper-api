@@ -1,3 +1,4 @@
+const mongoose = require('mongoose');
 const Wallpaper = require('../models/Wallpaper');
 
 // POST a new wallpaper
